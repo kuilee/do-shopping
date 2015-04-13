@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.docode.dao.StudentMapper">
+	<resultMap type="com.docode.bean.Student" id="student">
+		<id property="id" column="ID"/>
+		<result property="name" column="NAME"/>
+		<result property="pwd" column="PWD"/> 
+		<result property="age" column="AGE"/>
+		<result property="address" column="ADDRESS"/> 
+		<result property="isadmin" column="ISADMIN"/> 
+	</resultMap>
+	<select id="getStudentList" parameterType="hashMap" resultMap="student">
+		select * from student st 
+		where 1 = 1
+		<if test="key != null and key != ''">
+				and name like CONCAT(CONCAT('%',#{key}),'%') or
+				address like CONCAT(CONCAT('%',#{key}),'%')
+		</if>
+	</select>
+	
+	<select id="getStudent" parameterType="com.docode.bean.Student" resultMap="student">
+		select * from student st 
+		where 1=1
+		<if test="id != null and id != ''">
+			and st.id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			and st.name = #{name}
+		</if>
+	</select>
+	
+	<insert id="insertStudent" parameterType="com.docode.bean.Student">
+		insert into student (name,pwd,age,address,isadmin)
+		values(#{name},#{pwd},#{age},#{address},#{isadmin})
+	</insert>
+	
+	<update id="updateStudent" parameterType="com.docode.bean.Student">
+		update student
+		<set>
+			<if test="name">
+					name = #{name},
+			</if>
+			<if test="pwd">
+					pwd = #{pwd},
+			</if>
+			<if test="age">
+					age = #{age},
+			</if>
+			<if test="address">
+					address = #{address},
+			</if>
+			<if test="isadmin">
+					isadmin = #{isadmin}
+			</if>
+		</set>
+		where 1=1
+		<if test="id">
+				and id = #{id}
+		</if>
+	</update>
+	
+	<delete id="deleteById" parameterType="Integer">
+		delete from student  where id = #{id}
+	</delete>
+	
+</mapper>
